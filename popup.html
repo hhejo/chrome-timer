@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KOSTA Timer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        width: 190px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>KOSTA Timer</h1>
+    <form>
+      <div>
+        <label for="morningAlarmTime">오전 알림 시간:</label>
+        <input type="time" id="morningAlarmTime" />
+      </div>
+      <div>
+        <label for="eveningAlarmTime">오후 알림 시간:</label>
+        <input type="time" id="eveningAlarmTime" />
+      </div>
+      <button type="submit" id="saveTime">알림 시간 저장하기</button>
+    </form>
+    <script src="popup.js"></script>
+  </body>
+</html>
