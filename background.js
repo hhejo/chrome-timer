@@ -1,25 +1,26 @@
+chrome.runtime.onInstalled.addListener(() => console.log('onInstalled'));
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'setAlarms') {
-    const morningTime = message.morningTime;
-    const eveningTime = message.eveningTime;
-    console.log('Setting morning, evening:', morningTime, eveningTime);
-    setAlarm(morningTime, 'morningAlarm');
-    setAlarm(eveningTime, 'eveningAlarm');
+  console.log('onMessage:', message); // message: { action: 'setAlarms', morningTime: 'HH:mm', eveningTime: 'HH:mm' }
+  const { action, morningAlarmTime, eveningAlarmTime } = message;
+  if (action === 'setAlarms') {
+    // const morningTime = message.morningTime;
+    // const eveningTime = message.eveningTime;
+    setAlarm(morningAlarmTime, 'morningAlarmTime');
+    setAlarm(eveningAlarmTime, 'eveningAlarmTime');
   }
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === 'morningAlarm') {
-    showNotification('입실 체크', `09:05!! 입실 체크하세요!!`);
-  } else if (alarm.name === 'eveningAlarm') {
-    showNotification('퇴실 체크', `17:50!! 퇴실 체크하세요!!`);
-    // resetAlarms(); // 다음 날 알람을 다시 설정
-    // chrome.storage.sync.get(['eveningAlarm'], (result) => {
-    //   if (result.eveningAlarm) {
-    //     setAlarm(result.eveningAlarm);
-    //   }
-    // });
-  }
+  console.log('alarm:', alarm); // alarm: { name: 'morningAlarmTime', scheduledTime: 1728951240001.784 }
+  chrome.storage.sync.get(alarm.name, (result) => {
+    console.log('result:', result); // result: { morningAlarmTime: 'HH:mm' }
+    const alarmTime = result[alarm.name];
+    if (alarm.name === 'morningAlarmTime')
+      showNotification('입실 체크', `${alarmTime}의 알람이 활성화 되었습니다`);
+    else if (alarm.name === 'eveningAlarmTime')
+      showNotification('퇴실 체크', `${alarmTime}의 알람이 활성화 되었습니다`);
+  });
 });
 
 function setAlarm(timeString, alarmName) {
@@ -34,9 +35,7 @@ function setAlarm(timeString, alarmName) {
     0,
     0
   );
-  if (alarmTime < now) {
-    alarmTime.setDate(alarmTime.getDate() + 1);
-  }
+  if (alarmTime < now) alarmTime.setDate(alarmTime.getDate() + 1);
   const timeUntilAlarm = alarmTime.getTime() - now.getTime();
   chrome.alarms.clear(alarmName, () => {
     chrome.alarms.create(alarmName, { delayInMinutes: timeUntilAlarm / 60000 });
@@ -48,7 +47,7 @@ function showNotification(title, message) {
   chrome.notifications.create(
     {
       type: 'basic',
-      iconUrl: 'icon.png',
+      iconUrl: title === '입실 체크' ? 'icon1.png' : 'icon2.png',
       title: title,
       message: message,
       priority: 2,
@@ -58,8 +57,3 @@ function showNotification(title, message) {
     }
   );
 }
-
-// 확장 프로그램이 설치될 때 알람을 설정
-chrome.runtime.onInstalled.addListener(() => {
-  console.log('Hello');
-});
