@@ -2,19 +2,19 @@
   "manifest_version": 3,
   "name": "KOSTA Timer",
   "version": "1.0",
-  "description": "KOSTA enter/exit timer extension made by HHJ",
+  "description": "KOSTA enter/exit timer extension made by HeeJoo",
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icon.png"
+    "default_icon": "icon1.png"
   },
   "background": {
     "service_worker": "background.js"
   },
   "permissions": ["alarms", "notifications", "storage", "activeTab"],
   "icons": {
-    "16": "icon.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "icon1.png",
+    "48": "icon1.png",
+    "128": "icon1.png"
   },
   "content_scripts": [
     {
