@@ -39,7 +39,8 @@ function showNotification(title, message) {
   chrome.notifications.create(
     {
       type: 'basic',
-      iconUrl: title === '입실 체크' ? 'icon1.png' : 'icon2.png',
+      iconUrl:
+        title === '입실 체크' ? './assets/icon1.png' : './assets/icon2.png',
       title: title,
       message: message,
       priority: 2,

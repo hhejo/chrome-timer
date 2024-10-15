@@ -5,16 +5,16 @@
   "description": "KOSTA enter/exit timer extension made by HeeJoo",
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icon1.png"
+    "default_icon": "./assets/icon1.png"
   },
   "background": {
     "service_worker": "background.js"
   },
   "permissions": ["alarms", "notifications", "storage", "activeTab"],
   "icons": {
-    "16": "icon1.png",
-    "48": "icon1.png",
-    "128": "icon1.png"
+    "16": "./assets/icon1.png",
+    "48": "./assets/icon1.png",
+    "128": "./assets/icon1.png"
   },
   "content_scripts": [
     {
