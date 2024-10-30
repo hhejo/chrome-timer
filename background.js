@@ -1,5 +1,19 @@
 chrome.runtime.onInstalled.addListener(() => console.log('onInstalled'));
 
+chrome.runtime.onStartup.addListener(() => {
+  console.log('onStartup - re-registering alarms');
+  // 서비스 워커가 재시작하면 알람을 재등록
+  chrome.storage.sync.get(
+    ['morningAlarmTime', 'eveningAlarmTime'],
+    (result) => {
+      if (result.morningAlarmTime)
+        setAlarm(result.morningAlarmTime, 'morningAlarmTime');
+      if (result.eveningAlarmTime)
+        setAlarm(result.eveningAlarmTime, 'eveningAlarmTime');
+    }
+  );
+});
+
 chrome.runtime.onMessage.addListener((message) => {
   console.log('onMessage message:', message); // message: { action: 'setAlarms', morningTime: 'HH:mm', eveningTime: 'HH:mm' }
   const { action, morningAlarmTime, eveningAlarmTime } = message;
@@ -50,3 +64,19 @@ function showNotification(title, message) {
     }
   );
 }
+
+// 10분마다 설정된 알람이 있는지 확인하고 없으면 재등록
+setInterval(() => {
+  console.log('Checking alarms periodically...');
+  chrome.storage.sync.get(
+    ['morningAlarmTime', 'eveningAlarmTime'],
+    (result) => {
+      if (result.morningAlarmTime) {
+        setAlarm(result.morningAlarmTime, 'morningAlarmTime');
+      }
+      if (result.eveningAlarmTime) {
+        setAlarm(result.eveningAlarmTime, 'eveningAlarmTime');
+      }
+    }
+  );
+}, 600000); // 10분 = 600,000 밀리초
